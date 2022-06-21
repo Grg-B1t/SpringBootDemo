@@ -1,6 +1,9 @@
 package com.example.demo5.Controller;
 
-import org.springframework.stereotype.Controller;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,72 +12,64 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo5.Model.Student;
+import com.example.demo5.Model.Employee;
+import com.example.demo5.Service.EmployeeService;
+import com.example.demo5.Service.EmployeeServiceInterface;
 
-// @Controller
-// @ResponseBody
 @RestController
+@RequestMapping("api/v1")
 public class EndPoint {
 
-//    @RequestMapping(value = "/api/v1", method = RequestMethod.GET)
-    @GetMapping("/api/v1")
-    public String getString(){
-        return "First Rest API";
+    @Autowired
+    EmployeeService es;
+
+
+    @GetMapping("/")
+    public List<Employee> getName() {
+        return es.getAllEmployee();
     }
 
-    @PostMapping("/api/v1")
-    public Student newUser(@Validated @RequestBody Student stu){
-        System.out.println(stu.getId() + " " + stu.getName() + " " + stu.getGrage());
-        return stu;
+    @GetMapping("/{uid}")
+    public Optional<Employee> getId(@PathVariable(value = "uid") int id) {
+        
+        return es.getUserbyId(id);
     }
 
-    @GetMapping("/api/v1/{id}")
-    public String getId(@PathVariable(value = "id") Long id){
-        return "Your ID : " + id;
+    @GetMapping("/{uid}/{uname}")
+    public Optional<Employee> getIdandName(@PathVariable(value = "uid") Integer id, @PathVariable(value = "uname") String name) {
+        // System.out.println(es.getUserbyIdandName(id, name).get().getName());
+        return es.getUserbyIdandName(id, name);
     }
 
-    @GetMapping("/api1/v1/{name}")
-    public String getName(@PathVariable(value = "name") String name){
-    return "your name :" + name;
+    @GetMapping("/v2")
+    public List<Employee> getNameParam(@RequestParam(value = "name") String name) {
+        return es.getUserbyName(name);
     }
 
-    @GetMapping("/api/v2/{id}/{name}")
-    public String getIdandName(@PathVariable(value = "id")Long id, @PathVariable(value = "name") String name){
-        return "your Name: " + name + "\nYour ID: " + id;
+    @GetMapping("/v2/{id}/{name}")
+    public Optional<Employee> getSomething(@PathVariable(value = "id") Integer id, @PathVariable(value = "name") String name,
+            @RequestParam(value = "company") String company, @RequestParam(value = "salary") Integer salary) {
+                return es.getUserbyIdNameCompanySalary(id, name, company, salary);
+            }
+
+    @PostMapping("/v3/")
+    public Employee __create_new_employee(@Validated @RequestBody Employee emp){
+        return es.createEmployee(emp);
     }
 
-    @GetMapping("/api/v3")
-    public String getSomethihng(@RequestParam(value = "some") String some){
-        return "Here is something: " + some;
+    @PutMapping("/{id}")
+    public Employee __update_emplopyee(@Validated @PathVariable(value = "id") int id, @RequestBody Employee emp){        
+        return es.updateUserbyId(id, emp);
     }
 
-    @GetMapping("/api/v4")
-    public String getSomethihng2(@RequestParam(value = "id") Long id, @RequestParam(value = "name") String name){
-        return "Your ID :" + id + "\nYour Name: " + name;
+    @DeleteMapping("/{id}")
+    public Employee __delete_employee(@PathVariable(value = "id") Integer id){
+        
+        return es.deleteUserbyId(id);
     }
 
-    @GetMapping("/api/v5")
-    public String getSomethihng3(@RequestParam(value = "id") Long id, @RequestParam(value = "name") String name, @RequestParam(value = "grade") Double grade){
-        return "Your ID :" + id + "\nYour Name: " + name + "\nYour Grade: " + grade;
-    }
 
-    @GetMapping("/api/v6/{uid}")
-    public String somethingAwe(@PathVariable(value = "uid") long id, @RequestParam(value="uname") String name){
-        return "User ID: " + id + "\nUser Name: " + name;
-    }
-
-    @PutMapping("/api/v7/{uid}")
-    public String updateSomething(@PathVariable(value = "uid") long id, @Validated @RequestBody Student stu){
-        return "Your user id : " + id + " with user name : " + stu.getName() + " is updated successfully"; 
-    }
-
-    @DeleteMapping("api/d1/{id}")
-    public String deleteSomething(@PathVariable(value = "id") long id){
-        return "The user with id " + id + " is deleted successfully";
-    }
 }
