@@ -9,9 +9,11 @@ public interface EmployeeServiceInterface {
     List<Employee> getAllEmployee();
     Employee createEmployee(Employee e);
     Optional<Employee> getUserbyId(int id);
-    Optional<Employee> getUserbyIdandName(Integer id, String name);
+    Employee getUserbyIdandName(Integer id, String name);
     List<Employee> getUserbyName(String name);
-    Optional<Employee> getUserbyIdNameCompanySalary(Integer id, String name, String company, Integer salary);
+    Employee getUserbyIdNameCompanySalary(Integer id, String name, String company, Integer salary);
     Employee updateUserbyId(Integer id, Employee emp);
+    Employee updateUserbyData(Employee emp);
     Employee deleteUserbyId(Integer id);
+
 }

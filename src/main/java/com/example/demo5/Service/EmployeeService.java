@@ -43,10 +43,10 @@ public class EmployeeService implements EmployeeServiceInterface{
     }
 
     @Override
-    public Optional<Employee> getUserbyIdandName(Integer id, String name) {
+    public Employee getUserbyIdandName(Integer id, String name) {
         // TODO Auto-generated method stub
         // System.out.println(empList.stream().filter(a -> a.getId() == id & a.getName() == name).findFirst().get());
-        return empList.stream().filter(a -> id.equals(a.getId()) && name.equals(a.getName())).findFirst();
+        return empList.stream().filter(a -> id.equals(a.getId()) && name.equals(a.getName())).findFirst().get();
         // for (Employee employee : empList) {
         //     if(id.equals(employee.getId()) && name.equals(employee.getName())){
         //         return employee;
@@ -61,9 +61,9 @@ public class EmployeeService implements EmployeeServiceInterface{
     }
 
     @Override
-    public Optional<Employee> getUserbyIdNameCompanySalary(Integer id, String name, String company, Integer salary) {
+    public Employee getUserbyIdNameCompanySalary(Integer id, String name, String company, Integer salary) {
         // TODO Auto-generated method stub
-        return empList.stream().filter(a -> id.equals(a.getId()) && name.equals(a.getName()) && company.equals(a.getCompany()) && salary.equals(a.getSalary())).findFirst();
+        return empList.stream().filter(a -> id.equals(a.getId()) && name.equals(a.getName()) && company.equals(a.getCompany()) && salary.equals(a.getSalary())).findFirst().get();
     }
 
     @Override
@@ -91,10 +91,24 @@ public class EmployeeService implements EmployeeServiceInterface{
     }
 
     @Override
+    public Employee updateUserbyData(Employee emp) {
+        // TODO Auto-generated method stub
+        Employee e = empList.stream().filter(a -> emp.getId() == a.getId()).findFirst().get();
+        e.setName(emp.getName());
+        e.setCompany(emp.getCompany());
+        e.setField(emp.getField());
+        e.setSalary(emp.getSalary());
+
+        return e;
+    }
+
+    @Override
     public Employee deleteUserbyId(Integer id) {
         // TODO Auto-generated method stub
         Employee e = empList.stream().filter(a -> id.equals(a.getId())).findFirst().get();
         empList.remove(e);
         return e;
     }
+
+   
 }
